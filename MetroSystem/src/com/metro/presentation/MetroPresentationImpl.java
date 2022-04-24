@@ -34,6 +34,7 @@ public class MetroPresentationImpl implements MetroPresentation {
 	
 	@Override
 	public void performChoice(int choice) {
+		int metroCardId=0;
 		switch(choice) {
 		case 1: 
 				showCardMenu();
@@ -49,13 +50,13 @@ public class MetroPresentationImpl implements MetroPresentation {
 			    
 			    break;
 		case 5:
-			    System.out.println("Enter Metro Card ID : ");
-                int metroCardId = sc.nextInt();
+			    System.out.println("Enter Metro card ID : ");
+                metroCardId=sc.nextInt();
                 double currentBalance = usersService.getCardBalance(metroCardId);
-                if(currentBalance == 0)
-                  System.out.println("Incorrect Metro Card Id");
+                if(currentBalance <=0)
+                  System.out.println("Incorrect Metro Id");
                 else
-               	  System.out.println("Your Current Balance is: Rs. " + currentBalance);
+               	  System.out.println("Your current Balance is: "+currentBalance);
 			    break;
 		case 6: System.exit(0);
 		default : System.out.println("Enter valid choice !");
@@ -82,13 +83,13 @@ public class MetroPresentationImpl implements MetroPresentation {
 				break;
 		case 2:	System.out.println("Enter your user id : ");
 			   	int userId = sc.nextInt();
-				if(usersService.registerMetroCardID(userId)) {
-					System.out.println("Metro Card Id Generated Succesfully...");
-					System.out.println("Your Metro Card Id is : " + usersService.getMetroCardId(userId));
+				if(usersService.registerMetroID(userId)) {
+					System.out.println("Metro Id Registered Succesfully...");
+					System.out.println("Your Metro Id is : " + usersService.getMetroId(userId));
 					System.out.println("Please keep it safe for future use...");
 				}
 				else
-					System.out.println("Metro Card ID Registration failed!");
+					System.out.println("Metro ID Registration failed!");
 				break;
 		case 3:
 				break;
