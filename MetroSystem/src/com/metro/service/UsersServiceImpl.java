@@ -20,4 +20,16 @@ public class UsersServiceImpl implements UsersService {
 		return usersDao.getUserId(users);
 	}
 
+	@Override
+	public boolean registerMetroID(int userId) {
+		if(usersDao.registerMetroId(userId)>0)
+			return true;
+		return false;
+	}
+
+	@Override
+	public int getMetroId(int userId) {
+		return usersDao.getMetroId(userId);
+	}
+
 }

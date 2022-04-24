@@ -71,7 +71,15 @@ public class MetroPresentationImpl implements MetroPresentation {
 				else
 					System.out.println("User Registration failed!");
 				break;
-		case 2:
+		case 2:	System.out.println("Enter your user id : ");
+			   	int userId = sc.nextInt();
+				if(usersService.registerMetroID(userId)) {
+					System.out.println("Metro Id Registered Succesfully...");
+					System.out.println("Your Metro Id is : " + usersService.getMetroId(userId));
+					System.out.println("Please keep it safe for future use...");
+				}
+				else
+					System.out.println("Metro ID Registration failed!");
 				break;
 		case 3:
 				break;

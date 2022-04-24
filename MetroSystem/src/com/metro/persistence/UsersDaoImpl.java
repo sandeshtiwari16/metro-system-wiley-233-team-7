@@ -53,9 +53,45 @@ public class UsersDaoImpl implements UsersDao {
 	}
 
 	@Override
-	public void registerMetroId() {
-		// TODO Auto-generated method stub
+	public int registerMetroId(int userId) {
+		int rows = 0;
+		PreparedStatement preparedStatement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			preparedStatement = connection.prepareStatement("INSERT INTO METRO_CARD(USER_ID, BALANCE) VALUES (?,?)");
+			preparedStatement.setInt(1, userId);
+			preparedStatement.setInt(2, 100);
+	
+			rows = preparedStatement.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			rows = 0;
+		} catch (SQLException e) {
+			rows = 0;
+		}
+		return rows;
+	}
 
+	@Override
+	public int getMetroId(int userId) {
+		int metroId = 0;
+		PreparedStatement preparedStatement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			preparedStatement = connection.prepareStatement("SELECT METRO_CARD_ID FROM METRO_CARD WHERE USER_ID=?");
+			preparedStatement.setInt(1,userId);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				metroId = resultSet.getInt("metro_card_id");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return metroId;
 	}
 
 }
