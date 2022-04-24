@@ -32,4 +32,9 @@ public class UsersServiceImpl implements UsersService {
 		return usersDao.getMetroId(userId);
 	}
 
+	@Override
+	public double getCardBalance(int metroCardId) {
+		return usersDao.getCardBalance(metroCardId);
+	}
+
 }

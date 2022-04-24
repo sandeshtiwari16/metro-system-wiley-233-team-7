@@ -34,6 +34,7 @@ public class MetroPresentationImpl implements MetroPresentation {
 	
 	@Override
 	public void performChoice(int choice) {
+		int metroCardId=0;
 		switch(choice) {
 		case 1: 
 				showCardMenu();
@@ -43,11 +44,20 @@ public class MetroPresentationImpl implements MetroPresentation {
 		case 2:
 				break;
 		case 3:
+			    
 				break;
-		case 4:
-				break;
+		case 4: 
+			    
+			    break;
 		case 5:
-				break;
+			    System.out.println("Enter Metro card ID : ");
+                metroCardId=sc.nextInt();
+                double currentBalance = usersService.getCardBalance(metroCardId);
+                if(currentBalance <=0)
+                  System.out.println("Incorrect Metro Id");
+                else
+               	  System.out.println("Your current Balance is: "+currentBalance);
+			    break;
 		case 6: System.exit(0);
 		default : System.out.println("Enter valid choice !");
 		

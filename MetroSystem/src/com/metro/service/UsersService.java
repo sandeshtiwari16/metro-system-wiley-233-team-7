@@ -7,4 +7,5 @@ public interface UsersService {
 	public boolean registerNewUser(Users users);
 	public boolean registerMetroID(int userId);
 	public int getMetroId(int userId);
+	public double getCardBalance(int metroCardId);
 }
