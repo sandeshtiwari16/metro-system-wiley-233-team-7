@@ -40,7 +40,6 @@ public class MetroPresentationImpl implements MetroPresentation {
 		case 5:
 				break;
 		case 6: System.exit(0);
-				break;
 		default : System.out.println("Enter valid choice !");
 		
 		}
