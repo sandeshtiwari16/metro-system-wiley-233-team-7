@@ -1,5 +1,8 @@
 package com.metro.persistence;
 
-public class UsersDao {
-
+public interface UsersDao {
+	
+	public void registerUser();
+	public void registerMetroId();
+	
 }

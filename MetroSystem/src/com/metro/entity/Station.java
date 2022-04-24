@@ -10,9 +10,9 @@ import lombok.ToString;
 @Data
 @ToString
 
-public class Users {
-
-	private String userName;
-	private String phoneNumber;
+public class Station {
+	
+	private String stationId;
+	private String stationName;
 	
 }
