@@ -1,8 +1,11 @@
 package com.metro.persistence;
 
+import com.metro.entity.Users;
+
 public interface UsersDao {
 	
-	public void registerUser();
+	public int getUserId(Users users);
+	public int registerNewUser(Users users);
 	public void registerMetroId();
 	
 }
