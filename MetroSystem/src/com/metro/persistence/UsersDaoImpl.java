@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.metro.entity.Users;
 
@@ -51,9 +53,31 @@ public class UsersDaoImpl implements UsersDao {
 		}
 		return rows;
 	}
+	
+	@Override
+	public List<Integer> getMetroCardId(int userId) {
+		List<Integer> list = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			preparedStatement = connection.prepareStatement("SELECT METRO_CARD_ID FROM METRO_CARD WHERE USER_ID=?");
+			preparedStatement.setInt(1,userId);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				list.add(resultSet.getInt("metro_card_id"));
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	@Override
-	public int registerMetroId(int userId) {
+	public int registerMetroCardId(int userId) {
 		int rows = 0;
 		PreparedStatement preparedStatement = null;
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
@@ -73,30 +97,8 @@ public class UsersDaoImpl implements UsersDao {
 	}
 
 	@Override
-	public int getMetroId(int userId) {
-		int metroId = 0;
-		PreparedStatement preparedStatement = null;
-		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
-				"root", "wiley");) {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			preparedStatement = connection.prepareStatement("SELECT METRO_CARD_ID FROM METRO_CARD WHERE USER_ID=?");
-			preparedStatement.setInt(1,userId);
-			
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				metroId = resultSet.getInt("metro_card_id");
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return metroId;
-	}
-
-	@Override
 	public double getCardBalance(int metroCardId) {
-		double currentBalance=0;
+		double currentBalance = 0;
 		PreparedStatement preparedStatement = null;
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
 				"root", "wiley");) {
@@ -115,5 +117,4 @@ public class UsersDaoImpl implements UsersDao {
 		}
 		return currentBalance;
 	}
-
 }
