@@ -2,8 +2,8 @@ package com.metro.presentation;
 
 public interface MetroPresentation {
 
-	public void showChoice();
+	public void showMenu();
 	public void performChoice(int choice);
-	public void showCardChoice();
-	public void performCardChoice(int choice2);
+	public void showCardMenu();
+	public void performCardChoice(int cardChoice);
 }
