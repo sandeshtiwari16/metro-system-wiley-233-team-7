@@ -37,8 +37,8 @@ public class MetroPresentationImpl implements MetroPresentation {
 		switch(choice) {
 		case 1: 
 				showCardMenu();
-				int choice2= sc.nextInt();
-				performCardChoice(choice2);
+				int cardChoice= sc.nextInt();
+				performCardChoice(cardChoice);
 				break;
 		case 2:
 				break;
