@@ -45,3 +45,5 @@ foreign key(metro_card_id) references metro_card(metro_card_id),
 foreign key(source_station_id) references station(station_id),
 foreign key(destination_station_id) references station(station_id)
 );
+
+ALTER TABLE metro_card AUTO_INCREMENT = 1001;

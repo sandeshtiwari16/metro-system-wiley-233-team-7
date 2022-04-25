@@ -3,12 +3,19 @@ package com.metro.presentation;
 import java.util.Scanner;
 
 import com.metro.entity.Users;
+import com.metro.service.CardBalanceService;
+import com.metro.service.CardBalanceServiceImpl;
+import com.metro.service.MetroCardService;
+import com.metro.service.MetroCardServiceImpl;
 import com.metro.service.UsersService;
 import com.metro.service.UsersServiceImpl;
 
 public class MetroPresentationImpl implements MetroPresentation {
 
 	UsersService usersService = new UsersServiceImpl();
+	MetroCardService metroCardService = new MetroCardServiceImpl();
+	CardBalanceService cardBalanceService = new CardBalanceServiceImpl();
+	
 	Scanner sc = new Scanner(System.in);
 			
 	@Override
@@ -52,17 +59,16 @@ public class MetroPresentationImpl implements MetroPresentation {
 		case 5:
 			    System.out.println("Enter Metro card ID : ");
                 metroCardId=sc.nextInt();
-                double currentBalance = usersService.getCardBalance(metroCardId);
-                if(currentBalance <=0)
-                  System.out.println("Incorrect Metro Id");
+                double currentBalance = cardBalanceService.getCardBalance(metroCardId);
+                if(currentBalance == 0)
+                  System.out.println("Incorrect Metro Card Id");
                 else
-               	  System.out.println("Your current Balance is: "+currentBalance);
+               	  System.out.println("Your Current Balance is: Rs. " + currentBalance);
 			    break;
 		case 6: System.exit(0);
-		default : System.out.println("Enter valid choice !");
+		default : System.out.println("Invalid choice!");
 		
 		}
-		
 	}
 	
 	@Override
@@ -83,17 +89,17 @@ public class MetroPresentationImpl implements MetroPresentation {
 				break;
 		case 2:	System.out.println("Enter your user id : ");
 			   	int userId = sc.nextInt();
-				if(usersService.registerMetroID(userId)) {
-					System.out.println("Metro Id Registered Succesfully...");
-					System.out.println("Your Metro Id is : " + usersService.getMetroId(userId));
+				if(metroCardService.registerMetroCardID(userId)) {
+					System.out.println("Metro Card Id Generated Succesfully...");
+					System.out.println("Your Metro Card Id is : " + metroCardService.getMetroCardId(userId));
 					System.out.println("Please keep it safe for future use...");
 				}
 				else
-					System.out.println("Metro ID Registration failed!");
+					System.out.println("Metro Card ID Registration Failed!");
 				break;
 		case 3:
 				break;
-		default : System.out.println("Enter valid choice !");
+		default : System.out.println("Invalid choice!");
 		}
 	
 	}
