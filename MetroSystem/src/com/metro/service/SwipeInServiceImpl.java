@@ -4,6 +4,7 @@ import com.metro.persistence.SwipeInDao;
 import com.metro.persistence.SwipeInDaoImpl;
 
 public class SwipeInServiceImpl implements SwipeInService {
+	
 	SwipeInDao swipeInDao = new SwipeInDaoImpl();
 
 	@Override

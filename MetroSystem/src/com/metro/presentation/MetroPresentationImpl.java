@@ -1,5 +1,6 @@
 package com.metro.presentation;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.metro.entity.Users;
@@ -7,6 +8,10 @@ import com.metro.service.CardBalanceService;
 import com.metro.service.CardBalanceServiceImpl;
 import com.metro.service.MetroCardService;
 import com.metro.service.MetroCardServiceImpl;
+import com.metro.service.StationService;
+import com.metro.service.StationServiceImpl;
+import com.metro.service.SwipeInService;
+import com.metro.service.SwipeInServiceImpl;
 import com.metro.service.UsersService;
 import com.metro.service.UsersServiceImpl;
 
@@ -15,6 +20,8 @@ public class MetroPresentationImpl implements MetroPresentation {
 	UsersService usersService = new UsersServiceImpl();
 	MetroCardService metroCardService = new MetroCardServiceImpl();
 	CardBalanceService cardBalanceService = new CardBalanceServiceImpl();
+	SwipeInService swipeInService = new SwipeInServiceImpl();
+	StationService stationService = new StationServiceImpl();
 	
 	Scanner sc = new Scanner(System.in);
 			
@@ -49,6 +56,23 @@ public class MetroPresentationImpl implements MetroPresentation {
 				performCardChoice(cardChoice);
 				break;
 		case 2:
+				System.out.println("Enter Metro Card ID : ");
+				metroCardId = sc.nextInt();
+				System.out.println("*************");
+				List<String> stations =  stationService.getStationsList();
+				for(String station : stations)
+					System.out.println(station);
+				System.out.println("*************");
+				System.out.println("Enter Source Station Name : ");
+				String sourceStation = sc.next();
+				
+				int stationId = stationService.getStationId(sourceStation);
+				if(stationId > 0) {
+					swipeInService.checkSwipeIn(metroCardId, stationId);
+				}else {
+					System.out.println("Incorrect Station Name! Please Check.");
+				}
+				
 				break;
 		case 3:
 			    
@@ -57,8 +81,8 @@ public class MetroPresentationImpl implements MetroPresentation {
 			    
 			    break;
 		case 5:
-			    System.out.println("Enter Metro card ID : ");
-                metroCardId=sc.nextInt();
+			    System.out.println("Enter Metro Card ID : ");
+                metroCardId = sc.nextInt();
                 double currentBalance = cardBalanceService.getCardBalance(metroCardId);
                 if(currentBalance == 0)
                   System.out.println("Incorrect Metro Card Id");
