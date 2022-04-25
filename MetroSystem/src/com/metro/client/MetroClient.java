@@ -9,6 +9,7 @@ public class MetroClient {
 	
 	public static void main(String[] args) {
 		MetroPresentation metroPresentation = new MetroPresentationImpl();
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
 			metroPresentation.showMenu();
