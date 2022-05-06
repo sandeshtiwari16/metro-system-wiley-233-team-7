@@ -2,6 +2,7 @@ package com.metro.service;
 
 import java.util.List;
 
+import com.metro.entity.Station;
 import com.metro.persistence.StationDao;
 import com.metro.persistence.StationDaoImpl;
 
@@ -15,7 +16,11 @@ public class StationServiceImpl implements StationService {
 	}
 
 	@Override
-	public List<String> getStationsList() {
+	public List<Station> getStationsList() {
 		return stationDao.getStationsList();
+	}
+	@Override
+	public List<String> getStationNamesList(){
+		return stationDao.getStationNamesList();
 	}
 }

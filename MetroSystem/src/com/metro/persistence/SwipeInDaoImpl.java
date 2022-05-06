@@ -8,32 +8,52 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SwipeInDaoImpl implements SwipeInDao{
-	private Connection connection;
-	private CardBalanceDaoImpl cardBalanceDao;
-	
-	
-	
-	public SwipeInDaoImpl() {
-		try {
-            String MySQLURL = "jdbc:mysql://localhost:3306/metro_system";
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(MySQLURL, "root", "wiley");
-        }
-		catch(Exception e) {
+import com.metro.exceptions.LowBalanceException;
+
+public class SwipeInDaoImpl implements SwipeInDao {
+
+	private CardBalanceDaoImpl cardBalance = new CardBalanceDaoImpl();
+
+
+	public int checkMetroId(int metroCardId) {
+		PreparedStatement preparedStatement = null;
+		int check = 0;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM METRO_CARD WHERE METRO_CARD_ID = ?");
+			preparedStatement.setInt(1, metroCardId);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				check = resultSet.getInt("COUNT(*)");
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return check;
 	}
-	
+
 	public boolean swipeIn(int metroCardId, int sourceStationId) {
 		PreparedStatement preparedStatement = null;
 		Timestamp current = Timestamp.from(Instant.now());
-		double balance = cardBalanceDao.getCardBalance(metroCardId);
-		if(balance > 20.0){
-			try{
+		int check = this.checkMetroId(metroCardId);
+		if (check == 0) {
+			System.out.println("Invalid Card ID");
+			return false;
+		}
+		double balance = 0.0d;
+		balance = cardBalance.getCardBalance(metroCardId);
+		if (balance > 20) {
+			try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+					"root", "wiley");) {
+				Class.forName("com.mysql.cj.jdbc.Driver");
 				preparedStatement = connection.prepareStatement("INSERT INTO JOURNEY VALUES(?,?,?,null,null,null)");
 				preparedStatement.setInt(1, metroCardId);
 				preparedStatement.setInt(2, sourceStationId);
@@ -41,26 +61,25 @@ public class SwipeInDaoImpl implements SwipeInDao{
 				try {
 					preparedStatement.executeUpdate();
 					return true;
-				} 
-				catch(SQLIntegrityConstraintViolationException e) {
-					System.out.println(e);
-					if(e.toString().contains("station")) {
-						System.out.println("Invalid Station number");
-					}
-					else if(e.toString().contains("Duplicate")){
-						System.out.println("Card already in use.");
-					}
-					else {
-						System.out.println("Invalid Card number");
-					}
+				} catch (SQLIntegrityConstraintViolationException e) {
+						System.out.println("Card Already In Use");
 				}
-			}
-			catch(SQLException e) {
+			} catch (SQLException e) {
 				System.out.println(e);
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
-		return false;	
+
+		else {
+			try {
+				throw new LowBalanceException("Card Has Low Balance");
+			} catch (LowBalanceException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return false;
 	}
 
-	
 }

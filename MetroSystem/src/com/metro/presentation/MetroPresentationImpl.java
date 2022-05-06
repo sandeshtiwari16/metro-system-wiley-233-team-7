@@ -3,17 +3,11 @@ package com.metro.presentation;
 import java.util.List;
 import java.util.Scanner;
 
+
 import com.metro.entity.Users;
-import com.metro.service.CardBalanceService;
-import com.metro.service.CardBalanceServiceImpl;
-import com.metro.service.MetroCardService;
-import com.metro.service.MetroCardServiceImpl;
-import com.metro.service.StationService;
-import com.metro.service.StationServiceImpl;
-import com.metro.service.SwipeInService;
-import com.metro.service.SwipeInServiceImpl;
-import com.metro.service.UsersService;
-import com.metro.service.UsersServiceImpl;
+import com.metro.exceptions.InvalidStationException;
+import com.metro.service.*;
+
 
 public class MetroPresentationImpl implements MetroPresentation {
 
@@ -59,20 +53,27 @@ public class MetroPresentationImpl implements MetroPresentation {
 				System.out.println("Enter Metro Card ID : ");
 				metroCardId = sc.nextInt();
 				System.out.println("*************");
-				List<String> stations =  stationService.getStationsList();
-				for(String station : stations)
-					System.out.println(station);
+				List<String> stationNames =  stationService.getStationNamesList();
+				for(String stationName : stationNames)
+					System.out.println(stationName);
 				System.out.println("*************");
 				System.out.println("Enter Source Station Name : ");
 				String sourceStation = sc.next();
-				
-				int stationId = stationService.getStationId(sourceStation);
-				if(stationId > 0) {
-					swipeInService.checkSwipeIn(metroCardId, stationId);
-				}else {
-					System.out.println("Incorrect Station Name! Please Check.");
+				try {
+				if(!stationNames.contains(sourceStation.toLowerCase())) throw new InvalidStationException("Station does not exist");
 				}
-				
+				catch(InvalidStationException e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+				int stationId = stationService.getStationId(sourceStation);
+				if(swipeInService.checkSwipeIn(metroCardId, stationId)) {
+					System.out.println("You have successfully swiped in at the station "+ sourceStation);
+				}
+				else {
+					System.out.println("Access Denied");
+				}
+
 				break;
 		case 3:
 			    

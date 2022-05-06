@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.metro.entity.Station;
 
 public class StationDaoImpl implements StationDao {
 
@@ -33,8 +34,34 @@ public class StationDaoImpl implements StationDao {
 	}
 	
 	@Override
-	public List<String> getStationsList() {
-		List<String> stations = new ArrayList<>();
+	public List<Station> getStationsList() {
+		List<Station> stations = new ArrayList<Station>();
+
+		java.sql.Statement statement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM STATION");
+
+			while (resultSet.next()) {
+				int stationId = resultSet.getInt("STATION_ID");
+				String stationName = resultSet.getString("STATION_NAME");
+				Station station = new Station(stationId, stationName);
+				stations.add(station);
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return stations;
+	}
+	
+	@Override
+	public List<String> getStationNamesList() {
+		List<String> stationNames = new ArrayList<String>();
 
 		java.sql.Statement statement = null;
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
@@ -44,7 +71,8 @@ public class StationDaoImpl implements StationDao {
 			ResultSet resultSet = statement.executeQuery("SELECT STATION_NAME FROM STATION");
 
 			while (resultSet.next()) {
-				stations.add(resultSet.getString("STATION_NAME"));
+				String stationName = resultSet.getString("STATION_NAME").toLowerCase();
+				stationNames.add(stationName);
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -52,7 +80,7 @@ public class StationDaoImpl implements StationDao {
 			e.printStackTrace();
 		}
 
-		return stations;
+		return stationNames;
 	}
 
 }

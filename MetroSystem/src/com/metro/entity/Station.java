@@ -11,8 +11,7 @@ import lombok.ToString;
 @ToString
 
 public class Station {
-	
-	private String stationId;
+	private int stationId;
 	private String stationName;
 	
 }
