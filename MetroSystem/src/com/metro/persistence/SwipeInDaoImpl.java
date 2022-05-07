@@ -3,7 +3,6 @@ package com.metro.persistence;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
@@ -13,44 +12,14 @@ import com.metro.exceptions.LowBalanceException;
 
 public class SwipeInDaoImpl implements SwipeInDao {
 
-	private CardBalanceDaoImpl cardBalance = new CardBalanceDaoImpl();
-
-
-	public int checkMetroId(int metroCardId) {
-		PreparedStatement preparedStatement = null;
-		int check = 0;
-		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
-				"root", "wiley");) {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			
-			preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM METRO_CARD WHERE METRO_CARD_ID = ?");
-			preparedStatement.setInt(1, metroCardId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				check = resultSet.getInt("COUNT(*)");
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return check;
-	}
+	private CardBalanceDao cardBalance = new CardBalanceDaoImpl();
 
 	public boolean swipeIn(int metroCardId, int sourceStationId) {
 		PreparedStatement preparedStatement = null;
 		Timestamp current = Timestamp.from(Instant.now());
-		int check = this.checkMetroId(metroCardId);
-		if (check == 0) {
-			System.out.println("Invalid Card ID");
-			return false;
-		}
 		double balance = 0.0d;
 		balance = cardBalance.getCardBalance(metroCardId);
-		if (balance > 20) {
+		if (balance >= 20) {
 			try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
 					"root", "wiley");) {
 				Class.forName("com.mysql.cj.jdbc.Driver");
@@ -67,7 +36,6 @@ public class SwipeInDaoImpl implements SwipeInDao {
 			} catch (SQLException e) {
 				System.out.println(e);
 			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
