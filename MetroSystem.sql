@@ -1,31 +1,27 @@
 create database metro_system;
 use metro_system;
 
-create table users (
-user_id int primary key not null auto_increment, 
-user_name varchar(30) unique not null,
-phone_number varchar(10) not null
+create table metro_card(
+metro_card_id int primary key auto_increment,
+username varchar(30),
+phone varchar(10),
+balance double
 );
+
+ALTER TABLE metro_card AUTO_INCREMENT = 1001;
 
 create table station(
-station_id int primary key not null,
-station_name varchar(30) not null
+station_id int primary key,
+station_name varchar(30),
+station_code varchar(10)
 );
 
-insert into station(station_id, station_name) values 
-(01, "Yesvantpur"),
-(02, "Goraguntepalya"),
-(03, "Jalahalli"),
-(04, "Dasarahalli"),
-(05, "Nagasandra");
-
-create table metro_card(
-metro_card_id int not null auto_increment,
-user_id int,
-balance double not null,
-primary key(metro_card_id),
-foreign key (user_id) references users(user_id)
-);
+insert into station(station_id, station_name,station_code) values 
+(1, "Yesvantpur", "YPR"),
+(2, "Goraguntepalya", "GPA"),
+(3, "Jalahalli", "JHI"),
+(4, "Dasarahalli", "DHI"),
+(5, "Nagasandra", "NGA");
 
 create table journey(
 metro_card_id int not null,
@@ -51,4 +47,3 @@ foreign key(metro_card_id) references metro_card(metro_card_id),
 foreign key(source_station_id) references station(station_id),
 foreign key(destination_station_id) references station(station_id)
 );
-ALTER TABLE metro_card AUTO_INCREMENT = 1001;

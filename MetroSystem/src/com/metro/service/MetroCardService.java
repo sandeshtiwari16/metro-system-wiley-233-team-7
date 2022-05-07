@@ -1,8 +1,8 @@
 package com.metro.service;
 
-import java.util.List;
+import com.metro.entity.MetroCard;
 
 public interface MetroCardService {
-	public List<Integer> getMetroCardId(int userId);
-	public boolean registerMetroCardID(int userId);
+	public int registerMetroCard(MetroCard metroCard);
+	public boolean ifMetroCardExists(int metroCardId);
 }

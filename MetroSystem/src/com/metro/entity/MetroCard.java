@@ -10,9 +10,15 @@ import lombok.ToString;
 @Data
 @ToString
 
-public class Users {
+public class MetroCard {
 
 	private String userName;
 	private String phoneNumber;
+	private double balance;
 	
+	public MetroCard(String username, String phoneNumber) {
+		this.userName = username;
+		this.phoneNumber = phoneNumber;
+		this.balance = 100.0;
+	}
 }

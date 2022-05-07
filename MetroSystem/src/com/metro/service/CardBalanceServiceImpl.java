@@ -11,4 +11,11 @@ public class CardBalanceServiceImpl implements CardBalanceService {
 	public double getCardBalance(int metroCardId) {
 		return cardBalanceDao.getCardBalance(metroCardId);
 	}
+
+	@Override
+	public boolean addCardBalance(int metroCardId, double amount) {
+		if(cardBalanceDao.addCardBalance(metroCardId, amount) > 0)
+			return true;
+		return false;
+	}
 }

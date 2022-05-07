@@ -12,10 +12,10 @@ public class MetroClient {
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
-			metroPresentation.showMenu();
+			metroPresentation.showCardMenu();
 			System.out.println("Enter your choice : ");
 			int choice = scanner.nextInt();
-			metroPresentation.performChoice(choice);
+			metroPresentation.performCardChoice(choice);
 		}
 	}
 

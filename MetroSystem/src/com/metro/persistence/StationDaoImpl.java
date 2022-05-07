@@ -47,7 +47,8 @@ public class StationDaoImpl implements StationDao {
 			while (resultSet.next()) {
 				int stationId = resultSet.getInt("STATION_ID");
 				String stationName = resultSet.getString("STATION_NAME");
-				Station station = new Station(stationId, stationName);
+				String stationCode = resultSet.getString("STATION_CODE");
+				Station station = new Station(stationId, stationName, stationCode);
 				stations.add(station);
 			}
 		} catch (ClassNotFoundException e) {
@@ -55,32 +56,6 @@ public class StationDaoImpl implements StationDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return stations;
 	}
-	
-	@Override
-	public List<String> getStationNamesList() {
-		List<String> stationNames = new ArrayList<String>();
-
-		java.sql.Statement statement = null;
-		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
-				"root", "wiley");) {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT STATION_NAME FROM STATION");
-
-			while (resultSet.next()) {
-				String stationName = resultSet.getString("STATION_NAME").toLowerCase();
-				stationNames.add(stationName);
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return stationNames;
-	}
-
 }

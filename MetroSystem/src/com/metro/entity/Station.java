@@ -13,5 +13,5 @@ import lombok.ToString;
 public class Station {
 	private int stationId;
 	private String stationName;
-	
+	private String stationCode;
 }
