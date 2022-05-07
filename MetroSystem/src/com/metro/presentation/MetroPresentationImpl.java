@@ -20,6 +20,7 @@ public class MetroPresentationImpl implements MetroPresentation {
 	Scanner sc = new Scanner(System.in);
 			
 	private int metroCardId = 0;
+	
 	@Override
 	public void showCardMenu() {
 		System.out.println("===============================");
@@ -110,6 +111,10 @@ public class MetroPresentationImpl implements MetroPresentation {
 		case 3: 
 			    System.out.println("Enter Amount To Add : ");
 			    double amount = sc.nextDouble();
+			    if(amount < 0.0) {
+			    	System.out.println("Negative Amount Not Allowed!");
+			    	break;
+			    }
 			    if(cardBalanceService.addCardBalance(metroCardId, amount))
 			    	System.out.println("Amount Added Succesfully...");
 			    else
