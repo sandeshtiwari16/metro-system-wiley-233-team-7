@@ -20,7 +20,7 @@ public class SwipeInDaoImpl implements SwipeInDao {
 		double balance = 0.0d;
 		balance = cardBalance.getCardBalance(metroCardId);
 		if (balance >= 20) {
-			if(checkIfSwipedIn(metroCardId)) {
+			if(checkIfSwipedOut(metroCardId)) {
 				try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
 						"root", "wiley");) {
 					Class.forName("com.mysql.cj.jdbc.Driver");
@@ -45,7 +45,7 @@ public class SwipeInDaoImpl implements SwipeInDao {
 		}
 		else {
 			try {
-				throw new LowBalanceException("Card Has Low Balance");
+				throw new LowBalanceException("Card Has Low Balance! Please Recharge...");
 			} catch (LowBalanceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -53,7 +53,7 @@ public class SwipeInDaoImpl implements SwipeInDao {
 		return false;
 	}
 	
-	public boolean checkIfSwipedIn(int metroCardId) {
+	public boolean checkIfSwipedOut(int metroCardId) {
 		java.sql.Statement statement = null;
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
 				"root", "wiley");) {
