@@ -1,5 +1,6 @@
 package com.metro.client;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.metro.presentation.MetroPresentation;
@@ -9,13 +10,17 @@ public class MetroClient {
 	
 	public static void main(String[] args) {
 		MetroPresentation metroPresentation = new MetroPresentationImpl();
-		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
 			metroPresentation.showCardMenu();
 			System.out.println("Enter your choice : ");
-			int choice = scanner.nextInt();
-			metroPresentation.performCardChoice(choice);
+			try {
+				int choice = scanner.nextInt();
+				metroPresentation.performCardChoice(choice);
+			}catch(InputMismatchException e) {
+				System.out.println("Invalid Input");
+				scanner.next();
+			}
 		}
 	}
 

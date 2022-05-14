@@ -4,7 +4,9 @@ public interface MetroPresentation {
 
 	public void showCardMenu();
 	public void performCardChoice(int cardChoice);
-	public void showMenu();
-	public void performChoice(int choice);
+	public void showMenuSwipeIn();
+	public void performChoiceSwipeIn(int choice);
+	public void showMenuSwipeOut();
+	public void performChoiceSwipeOut(int choice);
 	
 }

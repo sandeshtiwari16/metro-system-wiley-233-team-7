@@ -50,9 +50,16 @@ public class MetroPresentationImpl implements MetroPresentation {
 		case 2:	System.out.println("Enter Your Metro Card Id : ");
 			   	metroCardId = sc.nextInt();
 				if(metroCardService.ifMetroCardExists(metroCardId)) {
-					showMenu();
-					int choice = sc.nextInt();
-					performChoice(choice);
+					if(metroCardService.checkifSwipedIn(metroCardId)) {
+						showMenuSwipeOut();
+						int choice = sc.nextInt();
+						performChoiceSwipeOut(choice);
+					}else {
+						showMenuSwipeIn();
+						int choice = sc.nextInt();
+						performChoiceSwipeIn(choice);
+					}
+					
 				}
 				else
 					System.out.println("Metro Card ID Does Not Exist");
@@ -64,17 +71,86 @@ public class MetroPresentationImpl implements MetroPresentation {
 	}
 	
 	@Override
-	public void showMenu() {
+	public void showMenuSwipeOut() {
 		System.out.println("===============================");
-		System.out.println("1. Swipe In ");
-		System.out.println("2. Swipe Out ");
-		System.out.println("3. Add Balance to Metro Card");
-		System.out.println("4. Check Balance of Metro Card");
-		System.out.println("5. Exit ");
+		System.out.println("1. Swipe Out ");
+		System.out.println("2. Add Balance to Metro Card");
+		System.out.println("3. Check Balance of Metro Card");
+		System.out.println("4. Exit ");
 	}	
 	
 	@Override
-	public void performChoice(int choice) {
+	public void performChoiceSwipeOut(int choice) {
+		List<Station> stations =  stationService.getStationsList();
+		List<Integer> stationIds = new ArrayList<>();
+		List<String> stationCodes = new ArrayList<>();
+		List<String> stationNames = new ArrayList<>();
+		for(Station station : stations) {
+			stationNames.add(station.getStationName());
+			stationCodes.add(station.getStationCode());
+			stationIds.add(station.getStationId());
+		}
+		int stationId = 0;
+		switch(choice) {
+		case 1:
+				System.out.println("*************");
+			    for(Station station : stations) {
+			    	System.out.println(station.getStationName() + " -> " + station.getStationCode());
+			    }
+			    System.out.println("*************");
+				System.out.println("Enter Destination Station Code : ");
+				String destinationCode = sc.next();
+				destinationCode = destinationCode.toUpperCase();
+				try {
+					if(!stationCodes.contains(destinationCode)) 
+						throw new InvalidStationException("Incorrect Station Code!");
+				}
+				catch(InvalidStationException e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+				stationId = stationIds.get(stationCodes.indexOf(destinationCode));
+				double fare = swipeOutService.calculateFare(metroCardId, stationId);
+				double balance = swipeOutService.checkSwipeOut(metroCardId, stationId);
+				if(balance != -1) {
+					System.out.println("You Have Successfully Swiped Out With Card Balance As : " + balance);
+					System.out.println("Your Total Fare is : " + fare);
+				}
+				else System.out.println("Access Denied");
+				break;
+		case 2: 
+			    System.out.println("Enter Amount To Add : ");
+			    double amount = sc.nextDouble();
+			    if(amount < 0.0) {
+			    	System.out.println("Negative Amount Not Allowed!");
+			    	break;
+			    }
+			    if(cardBalanceService.addCardBalance(metroCardId, amount))
+			    	System.out.println("Amount Added Succesfully...");
+			    else
+			    	System.out.println("Amount Addition Failed!");
+			    break;
+		case 3:
+                System.out.println(cardBalanceService.getCardBalance(metroCardId));
+			    break;
+		case 4: 
+				break;
+		default : System.out.println("Invalid choice!");
+		
+		}
+	}
+	
+	@Override
+	public void showMenuSwipeIn() {
+		System.out.println("===============================");
+		System.out.println("1. Swipe In ");
+		System.out.println("2. Add Balance to Metro Card");
+		System.out.println("3. Check Balance of Metro Card");
+		System.out.println("4. Exit ");
+	}
+	
+	@Override
+	public void performChoiceSwipeIn(int choice) {
 		List<Station> stations =  stationService.getStationsList();
 		List<Integer> stationIds = new ArrayList<>();
 		List<String> stationCodes = new ArrayList<>();
@@ -109,31 +185,7 @@ public class MetroPresentationImpl implements MetroPresentation {
 							+ stationNames.get(stationCodes.indexOf(sourceCode)));
 				else System.out.println("Access Denied");
 				break;
-		case 2:
-				System.out.println("*************");
-			    for(Station station : stations) {
-			    	System.out.println(station.getStationName() + " -> " + station.getStationCode());
-			    }
-			    System.out.println("*************");
-				System.out.println("Enter Destination Station Code : ");
-				String destinationCode = sc.next();
-				destinationCode = destinationCode.toUpperCase();
-				try {
-					if(!stationCodes.contains(destinationCode)) 
-						throw new InvalidStationException("Incorrect Station Code!");
-				}
-				catch(InvalidStationException e) {
-					System.out.println(e.getMessage());
-					break;
-				}
-				stationId = stationIds.get(stationCodes.indexOf(destinationCode));
-				double balance = swipeOutService.checkSwipeOut(metroCardId, stationId);
-				if(balance != -1)
-					System.out.println("You Have Successfully Swiped Out With Card Balance As : "
-							+ balance);
-				else System.out.println("Access Denied");
-				break;
-		case 3: 
+		case 2: 
 			    System.out.println("Enter Amount To Add : ");
 			    double amount = sc.nextDouble();
 			    if(amount < 0.0) {
@@ -145,16 +197,13 @@ public class MetroPresentationImpl implements MetroPresentation {
 			    else
 			    	System.out.println("Amount Addition Failed!");
 			    break;
-		case 4:
+		case 3:
                 System.out.println(cardBalanceService.getCardBalance(metroCardId));
 			    break;
-		case 5: 
+		case 4: 
 				break;
 		default : System.out.println("Invalid choice!");
 		
 		}
 	}
-	
-	
-	
 }

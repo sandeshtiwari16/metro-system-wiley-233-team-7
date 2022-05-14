@@ -12,4 +12,9 @@ public class SwipeOutServiceImpl implements SwipeOutService {
 		return swipeOutDao.swipeOut(metroCardId, destinationStationId);
 	}
 
+	@Override
+	public double calculateFare(int metroCardId, int destinationStationId) {
+		return swipeOutDao.CalculateFare(metroCardId, destinationStationId);
+	}
+
 }

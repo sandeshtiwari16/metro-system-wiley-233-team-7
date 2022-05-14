@@ -19,4 +19,9 @@ public class MetroCardServiceImpl implements MetroCardService {
 			return true;
 		return false;
 	}
+
+	@Override
+	public boolean checkifSwipedIn(int metroCardId) {
+		return metroCardDao.checkIfSwipedIn(metroCardId);
+	}
 }

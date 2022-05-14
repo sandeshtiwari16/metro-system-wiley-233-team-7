@@ -65,4 +65,23 @@ public class MetroCardDaoImpl implements MetroCardDao {
 		}
 		return rows;
 	}
+	
+	@Override
+	public boolean checkIfSwipedIn(int metroCardId) {
+		java.sql.Statement statement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/metro_system", 
+				"root", "wiley");) {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM JOURNEY WHERE METRO_CARD_ID = "+ metroCardId +" AND DESTINATION_STATION_ID IS NULL");
+			if(resultSet.next()) {
+				return true;
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
