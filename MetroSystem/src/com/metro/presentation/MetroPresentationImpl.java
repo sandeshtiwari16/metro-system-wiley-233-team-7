@@ -125,6 +125,10 @@ public class MetroPresentationImpl implements MetroPresentation {
 			    	System.out.println("Negative Amount Not Allowed!");
 			    	break;
 			    }
+			    if(amount == 0.0) {
+			    	System.out.println("Invalid Amount");
+			    	break;
+			    }
 			    if(cardBalanceService.addCardBalance(metroCardId, amount))
 			    	System.out.println("Amount Added Succesfully...");
 			    else
@@ -190,6 +194,10 @@ public class MetroPresentationImpl implements MetroPresentation {
 			    double amount = sc.nextDouble();
 			    if(amount < 0.0) {
 			    	System.out.println("Negative Amount Not Allowed!");
+			    	break;
+			    }
+			    if(amount == 0.0) {
+			    	System.out.println("Invalid Amount");
 			    	break;
 			    }
 			    if(cardBalanceService.addCardBalance(metroCardId, amount))
